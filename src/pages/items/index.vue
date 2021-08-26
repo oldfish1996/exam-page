@@ -61,7 +61,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions({nextItem:'nextItem', prevItem:'prevItem', jumpToItem:'jumpToItem'}),
+    ...mapActions(['nextItem','prevItem','jumpToItem','init']),
     //跳到下一题并更新data中当前题目id
     next() {
       //跳转下一题
@@ -78,7 +78,6 @@ export default {
     moveToScore() {
       //存储最后一题的选项
       this.user_answer[this.nowId-1] = this.radio
-      // console.log(this.user_answer)
 
       let complete = true
       //检查是否有未作答题目
@@ -96,7 +95,7 @@ export default {
       }).then(() => {
         //确认后跳转到score页面(score组件)
         this.$router.push('score')
-        console.log(this.user_answer);
+        // console.log(this.user_answer);
         this.$message({
           type: 'success',
           message: '提交成功!'
@@ -111,6 +110,13 @@ export default {
       this.nowId = val
       this.jumpToItem(val)
     }
+  },
+  created() {
+    this.init();
+    console.log(this.user_answer)
+  },
+  beforeDestroy() {
+    console.log(this.user_answer)
   }
 }
 </script>

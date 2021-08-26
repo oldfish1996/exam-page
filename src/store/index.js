@@ -5,6 +5,10 @@ Vue.use(Vuex)
 
 //响应用户动作
 const actions = {
+  //初始化所有题目
+  init(context) {
+    context.commit('INIT')
+  },
   nextItem(context) {
     context.commit('addItemNum')
   },
@@ -17,6 +21,10 @@ const actions = {
 }
 //修改state的数据
 const mutations = {
+  INIT(state) {
+    state.itemNum = 1
+    state.user_answer.length = 0
+  },
   addItemNum(state) {
     state.itemNum ++
   },
