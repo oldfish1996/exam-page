@@ -100,10 +100,10 @@ const state = {
       title: '题目6',
       name: 'item6',
       answers: [
-        {id: 0,content: '题目5选项A'},
-        {id: 1,content: '题目5选项B'},
-        {id: 2,content: '题目5选项C'},
-        {id: 3,content: '题目5选项D(正确答案)'},
+        {id: 0,content: '题目6选项A'},
+        {id: 1,content: '题目6选项B'},
+        {id: 2,content: '题目6选项C'},
+        {id: 3,content: '题目6选项D(正确答案)'},
       ]
     }
   ]
