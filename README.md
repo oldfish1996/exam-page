@@ -1,4 +1,4 @@
-# happyfri
+# exam-test
 
 ## Project setup
 ```
