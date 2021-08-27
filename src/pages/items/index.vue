@@ -2,6 +2,10 @@
   <div class="container">
     <header>
       <h3>第{{nowId}}题</h3>
+      <h3>剩余时间 {{leftTimeH}} 
+                : {{leftTimeM}} 
+                : {{leftTimeS}}
+      </h3>
     </header>
     <main>
       <el-pagination
@@ -40,7 +44,7 @@ export default {
     return {
       radio: -1,  //用户选项
       nowId: 1,   //当前在第几题
-      pageSize: 1 //每页一道题
+      pageSize: 1, //每页一道题
     }
   },
   watch: {
@@ -51,17 +55,40 @@ export default {
         //跳转到其他题目，恢复radio选项
         this.radio = this.user_answer[newVal-1]
       }
+    },
+    leftTime: function(val) {
+      if(val<=0) {
+        setTimeout(() => {
+          //自动提交前存储最后一题用户选项
+          this.user_answer[this.nowId-1] = this.radio
+          this.$message('测试时间到，已自动提交')
+          this.$router.replace('score')
+        }, 1000);      
+      }
     }
   },
   computed: {
-    ...mapState(['itemDetails','itemNum','user_answer']),
+    ...mapState(['itemDetails','itemNum','user_answer','leftTime']),
     //当前在哪道题
     nowItem() {
       return this.itemDetails[this.itemNum-1]
+    },
+    //计时器格式
+    leftTimeH() {
+       let h = Math.floor(this.leftTime/3600)
+       return h.toString().length==2?h:"0"+h.toString();
+    },
+    leftTimeM() {
+       let m = Math.floor(this.leftTime%3600/60)
+       return m.toString().length==2?m:"0"+m.toString();
+    },
+    leftTimeS() {
+       let s = this.leftTime%60
+       return s.toString().length==2?s:"0"+s.toString();
     }
   },
   methods: {
-    ...mapActions(['nextItem','prevItem','jumpToItem','init']),
+    ...mapActions(['init','nextItem','prevItem','jumpToItem','stopTimer']),
     //跳到下一题并更新data中当前题目id
     next() {
       //跳转下一题
@@ -95,7 +122,6 @@ export default {
       }).then(() => {
         //确认后跳转到score页面(score组件)
         this.$router.push('score')
-        // console.log(this.user_answer);
         this.$message({
           type: 'success',
           message: '提交成功!'
@@ -111,11 +137,15 @@ export default {
       this.jumpToItem(val)
     }
   },
+  //测试user_answer
   created() {
+    //init里面有开始计时
     this.init();
     console.log(this.user_answer)
   },
   beforeDestroy() {
+    //清空定时器
+    this.stopTimer()
     console.log(this.user_answer)
   }
 }
@@ -131,6 +161,8 @@ export default {
     background-color: #ecf0f1;
   }
   header {
+    display: flex;
+    justify-content: space-between;
     flex: 1;
   }
   main {
@@ -138,7 +170,7 @@ export default {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    flex: 4;  
+    flex: 5;  
   }
   main h3 {
     padding: 2rem 0;
@@ -149,7 +181,7 @@ export default {
     flex-direction: column;
     align-items: flex-start;
     justify-content: space-around;
-    height: 150px;
+    height: 10rem;
     /* border: 1px solid red; */
   }
   .btn {
@@ -157,6 +189,7 @@ export default {
     text-align: center;
   }
   footer {
+    flex: 2;
     text-align: center;
   }
 </style>

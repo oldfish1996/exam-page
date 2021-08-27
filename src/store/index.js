@@ -9,14 +9,21 @@ const actions = {
   init(context) {
     context.commit('INIT')
   },
+  //下一题
   nextItem(context) {
     context.commit('addItemNum')
   },
+  // 上一题
   prevItem(context) {
     context.commit('subItemNum')
   },
+  //跳转到指定题号
   jumpToItem(context, index) {
     context.commit('jumpItemNum',index)
+  },
+  //停止计时
+  stopTimer(context) {
+    context.commit('STOP')
   }
 }
 //修改state的数据
@@ -24,6 +31,16 @@ const mutations = {
   INIT(state) {
     state.itemNum = 1
     state.user_answer.length = 0
+    state.leftTime = 3600
+    state.fullTime = 0
+    clearInterval(state.timer)
+    state.timer = setInterval(() => {
+      state.leftTime --
+      state.fullTime++
+      if(state.leftTime<=0){
+        clearInterval(state.timer)
+      }
+    }, 1000);
   },
   addItemNum(state) {
     state.itemNum ++
@@ -33,13 +50,17 @@ const mutations = {
   },
   jumpItemNum(state,index) {
     state.itemNum = index
+  },
+  STOP(state) {
+    clearInterval(state.timer)
   }
 }
 //保存具体数据
 const state = {
   itemNum: 1, //目前是第几题
-  allTime: 0,
-  timer: '',
+  timer: null,  //计时器
+  leftTime: 3600, //答题可用时间
+  fullTime: 0,    //用户答题用时
   //每一题正确答案的id
   right_answer: [0,3,1,1,2,3],
   //用户的选项

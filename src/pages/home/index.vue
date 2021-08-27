@@ -10,8 +10,23 @@ export default {
   name: 'Home',
   methods: {
     moveToItems() {
-      this.$router.push('items')
-    },
+      //弹窗提示
+      let alertMessage = '确认后进入答题并开始计时，中途无法暂停，是否进入答题？'
+      this.$confirm(alertMessage, '提醒', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        //确认后跳转到score页面(score组件)
+        this.$router.push('items')
+        this.$message({
+          type: 'success',
+          message: '计时开始!'
+        })
+      }).catch(reason => {
+        console.log(reason) 
+      })     
+    }
   }
 }
 </script>

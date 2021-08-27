@@ -1,6 +1,11 @@
 <template>
   <main>
     <h3>本次测试的满分为：{{fullScore}}</h3>
+    <h3>本次测试用时： 
+      <span v-if="timeH>0">{{timeH}} h &nbsp;</span>
+      <span v-if="timeH>0||(timeH==0&&timeM>0)">{{timeM}} min &nbsp;</span>
+      <span>{{timeS}} s &nbsp;</span>
+    </h3>
     <h1>您的最终得分为：{{finalScore}}</h1>
     <el-button type="primary" plain @click="moveToItems">再做一遍</el-button>
   </main>
@@ -16,7 +21,16 @@ export default {
     }
   },
   computed: {
-    ...mapState(['right_answer','user_answer']),
+    ...mapState(['right_answer','user_answer','fullTime']),
+    timeH() {
+      return Math.floor(this.fullTime/3600)
+    },
+    timeM() {
+      return Math.floor((this.fullTime-this.timeH*3600)/60)
+    },
+    timeS() {
+      return this.fullTime%60
+    },
     finalScore() {
       let result = 0
        this.user_answer.forEach((answer, index)=>{
